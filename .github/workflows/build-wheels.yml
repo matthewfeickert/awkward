@@ -1,8 +1,6 @@
 name: Build wheels
 
 on:
-  #DEBUG
-  # push:
   # Run daily at 1:23 UTC
   schedule:
     - cron: '23 1 * * *'
