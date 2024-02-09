@@ -10,7 +10,7 @@ on:
 jobs:
 
   build-wheels:
-    uses: matthewfeickert/awkward/.github/workflows/build-wheels.yml@ci/seperate-wheel-build-workflow
+    uses: scikit-hep/awkward/.github/workflows/build-wheels.yml@ci/seperate-wheel-build-workflow
 
   upload-awkward-cpp:
     needs: [build-wheels]
@@ -18,9 +18,9 @@ jobs:
     if: inputs.publish-pypi
     permissions:
       id-token: write
-    # environment:
-    #   name: "pypi"
-    #   url: "https://pypi.org/project/awkward-cpp/"
+    environment:
+      name: "pypi"
+      url: "https://pypi.org/project/awkward-cpp/"
     steps:
 
     - uses: actions/download-artifact@v4
@@ -29,7 +29,4 @@ jobs:
         path: dist
         merge-multiple: true
 
-    # - uses: pypa/gh-action-pypi-publish@v1.8.11
-
-    - name: Check download
-      run: ls -lhtra dist/
+    - uses: pypa/gh-action-pypi-publish@v1.8.11
