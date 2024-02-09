@@ -63,31 +63,6 @@ jobs:
       - name: Check sdist matches PyPI
         run: pipx run nox -s check_cpp_sdist_released -- awkward-cpp/dist/awkward-cpp*.tar.gz
 
-  build:
-    name: "Build wheel & sdist"
-    runs-on: ubuntu-latest
-    needs: [determine-source-date-epoch]
-    env:
-      SOURCE_DATE_EPOCH: ${{ needs.determine-source-date-epoch.outputs.source-date-epoch }}
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: true
-
-    - name: Prepare build files
-      run: pipx run nox -s prepare
-
-    - name: Build distributions
-      run: pipx run build --sdist --wheel
-
-    - name: Check metadata
-      run: pipx run twine check dist/*
-
-    - uses: actions/upload-artifact@v4
-      with:
-        name: distributions
-        path: dist/*
-
   bundle-headers:
     name: "Bundle header-only libraries"
     runs-on: ubuntu-latest
@@ -99,36 +74,40 @@ jobs:
         path: header-only
 
   upload:
-    needs: [build, check-requirements, check-cpp-on-pypi]
+    needs: [check-requirements, check-cpp-on-pypi]
     runs-on: ubuntu-latest
     if: (github.event_name == 'release' && github.event.action == 'published') || inputs.publish-pypi
     permissions:
       id-token: write
-    environment:
-      name: "pypi"
-      url: "https://pypi.org/project/awkward/"
+    # environment:
+    #   name: "pypi"
+    #   url: "https://pypi.org/project/awkward/"
     steps:
+    # Download wheels build in deploy-cpp.yml workflow
     - uses: actions/download-artifact@v4
       with:
-        name: distributions
+        name: awkward-wheel
         path: dist
 
-    - uses: pypa/gh-action-pypi-publish@v1.8.11
+    # - uses: pypa/gh-action-pypi-publish@v1.8.11
 
-  publish-headers:
-    name: "Publish header-only libraries alongside release"
-    runs-on: ubuntu-latest
-    needs: [bundle-headers]
-    if: github.event_name == 'release' && github.event.action == 'published'
-    steps:
-    - uses: actions/download-artifact@v4
-      with:
-        name: header-only
-        path: header-only
-    - name: Create archive
-      run: |
-        # Don't include `header-only` parent directory
-        env -C header-only/ zip -r header-only.zip .
-    - uses: softprops/action-gh-release@v1
-      with:
-        files: header-only/header-only.zip
+    - name: Check download
+      run: ls -lhtra dist/
+
+  # publish-headers:
+  #   name: "Publish header-only libraries alongside release"
+  #   runs-on: ubuntu-latest
+  #   needs: [bundle-headers]
+  #   if: github.event_name == 'release' && github.event.action == 'published'
+  #   steps:
+  #   - uses: actions/download-artifact@v4
+  #     with:
+  #       name: header-only
+  #       path: header-only
+  #   - name: Create archive
+  #     run: |
+  #       # Don't include `header-only` parent directory
+  #       env -C header-only/ zip -r header-only.zip .
+  #   - uses: softprops/action-gh-release@v1
+  #     with:
+  #       files: header-only/header-only.zip
