@@ -29,4 +29,7 @@ jobs:
         path: dist
         merge-multiple: true
 
+    - name: List distributions to be deployed
+      run: ls -l dist/
+
     - uses: pypa/gh-action-pypi-publish@v1.8.11
