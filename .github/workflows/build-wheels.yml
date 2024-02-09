@@ -119,7 +119,7 @@ jobs:
     - name: Upload wheels
       uses: actions/upload-artifact@v4
       with:
-        name: awkward-wheels-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.build }}
+        name: awkward-cpp-wheels-${{ matrix.os }}-${{ matrix.arch }}-${{ matrix.build }}
         path: wheelhouse/*.whl
 
   build_alt_wheels:
@@ -168,7 +168,7 @@ jobs:
     - name: Upload wheels
       uses: actions/upload-artifact@v4
       with:
-        name: awkward-wheels-${{ matrix.arch }}-py${{ matrix.python }}
+        name: awkward-cpp-wheels-${{ matrix.arch }}-py${{ matrix.python }}
         path: wheelhouse/*.whl
 
   build_awkward_wheel:
