@@ -10,7 +10,7 @@ on:
 jobs:
 
   build-wheels:
-    uses: scikit-hep/awkward/.github/workflows/build-wheels.yml@ci/seperate-wheel-build-workflow
+    uses: scikit-hep/awkward/.github/workflows/build-wheels.yml@main
 
   upload-awkward-cpp:
     needs: [build-wheels]
