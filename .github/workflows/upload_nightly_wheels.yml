@@ -20,7 +20,7 @@ jobs:
         # to work in subsequent jobs.
         # https://github.com/mamba-org/setup-micromamba#about-login-shells
         shell: bash -e -l {0}
-    if: github.repository_owner == 'scikit-hep'
+    # if: github.repository_owner == 'scikit-hep'
 
     steps:
       # https://github.com/actions/download-artifact/issues/3#issuecomment-1017141067
@@ -28,9 +28,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          PROJECT_REPO="scikit-hep/awkward"
-          BRANCH="main"
-          WORKFLOW_NAME="packaging-test.yml"
+          # PROJECT_REPO="scikit-hep/awkward"
+          # BRANCH="main"
+          # WORKFLOW_NAME="packaging-test.yml"
+          PROJECT_REPO="matthewfeickert/awkward"
+          BRANCH="ci/seperate-wheel-build-workflow"
+          WORKFLOW_NAME="build_wheels.yml"
           ARTIFACT_PATTERN="awkward*wheel*"  # awkward-wheel and awkward-cpp-wheels-*
 
           gh run --repo "${PROJECT_REPO}" \
@@ -42,7 +45,7 @@ jobs:
               '[
                 .[] |
                 # Filter on "schedule" and "workflow_dispatch" events to main (nightly build) ...
-                select(.event == "schedule" or .event == "workflow_dispatch") |
+                select(.event == "schedule" or .event == "workflow_dispatch" or .event == "push") |
                 # that have completed successfully ...
                 select(.status == "completed" and .conclusion == "success")
                ] |
