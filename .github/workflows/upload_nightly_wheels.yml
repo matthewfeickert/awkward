@@ -33,7 +33,7 @@ jobs:
           # WORKFLOW_NAME="packaging-test.yml"
           PROJECT_REPO="matthewfeickert/awkward"
           BRANCH="ci/seperate-wheel-build-workflow"
-          WORKFLOW_NAME="build_wheels.yml"
+          WORKFLOW_NAME="build-wheels.yml"
           ARTIFACT_PATTERN="awkward*wheel*"  # awkward-wheel and awkward-cpp-wheels-*
 
           gh run --repo "${PROJECT_REPO}" \
