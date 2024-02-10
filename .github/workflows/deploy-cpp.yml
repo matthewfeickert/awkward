@@ -10,7 +10,7 @@ on:
 jobs:
 
   build-wheels:
-    uses: ./.github/workflows/build-wheels.yml@main
+    uses: ./.github/workflows/build-wheels.yml
 
   upload-awkward-cpp:
     needs: [build-wheels]
